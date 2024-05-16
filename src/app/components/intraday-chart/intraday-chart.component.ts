@@ -33,10 +33,6 @@ export class IntradayChartComponent implements OnInit {
     rangeSelector: {
       buttons: [{
         type: 'minute',
-        count: 1,
-        text: '1m'
-      }, {
-        type: 'minute',
         count: 5,
         text: '5m'
       }, {
@@ -69,7 +65,10 @@ export class IntradayChartComponent implements OnInit {
     yAxis: [
       {
         labels: {
-          align: "left"
+          align: "left",
+          style: {
+            color: '#efefef'
+          }
         },
         height: "80%",
         resize: {
@@ -78,11 +77,30 @@ export class IntradayChartComponent implements OnInit {
       },
       {
         labels: {
-          align: "left"
+          align: "left",
+          style: {
+            color: '#efefef'
+          }
         },
         top: "80%",
         height: "20%",
         offset: 0
+      }
+    ],
+    xAxis: [
+      {
+        labels: {
+          style: {
+            color: '#efefef'
+          }
+        },
+      },
+      {
+        labels: {
+          style: {
+            color: '#efefef'
+          }
+        },
       }
     ],
     tooltip: {
@@ -146,7 +164,7 @@ export class IntradayChartComponent implements OnInit {
   };
 
   ngOnInit(): void {
-    this.symbol && this.symbolService.getIntraday(this.symbol, '5min', "full").subscribe((highChartData: HighchartsData) => {
+    this.symbol && this.symbolService.getIntraday(this.symbol, '1min', "full").subscribe((highChartData: HighchartsData) => {
       this.setChartData(highChartData);
     });
   };
