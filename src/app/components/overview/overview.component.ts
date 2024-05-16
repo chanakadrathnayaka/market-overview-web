@@ -11,7 +11,7 @@ import {NgForOf} from "@angular/common";
 })
 export class OverviewComponent implements OnInit {
 
-  symbols: string[] = ['AAPL', 'GOOG', 'IBM', 'PDFS'] //
+  symbols: string[] = ['AAPL', 'GOOG', 'IBM', 'PDFS', 'AMZN', 'META', 'TSLA'] //
   ngOnInit(): void {
 
   }
