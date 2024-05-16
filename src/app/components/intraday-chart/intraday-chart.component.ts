@@ -20,6 +20,7 @@ export class IntradayChartComponent implements OnInit {
   @Input() index: number = 0;
   symbolService: SymbolService = inject(SymbolService);
   HighchartsInstance: typeof Highcharts = Highstock;
+  hasChartUpdated: boolean = false;
   chartOptions: Highcharts.Options = {
     title: {
       style: {
@@ -59,8 +60,8 @@ export class IntradayChartComponent implements OnInit {
         type: 'all',
         text: 'All'
       }],
-      inputEnabled: true, // it supports only days
-      selected: 4 // all
+      inputEnabled: true,
+      selected: 7
     },
     yAxis: [
       {
@@ -170,21 +171,36 @@ export class IntradayChartComponent implements OnInit {
   };
 
   setChartData(highChartData: HighchartsData): void {
-    this.HighchartsInstance.charts[this.index]?.title.update({text: `${this.symbol} Stock Price`});
-    const ohlcSeries = this.HighchartsInstance.charts[this.index]?.series![0];
-    const volumeSeries = this.HighchartsInstance.charts[this.index]?.series![1];
+    /*    this.HighchartsInstance.charts[this.index]?.title.update({text: `${this.symbol} Stock Price`});
+        const ohlcSeries = this.HighchartsInstance.charts[this.index]?.series![0];
+        const volumeSeries = this.HighchartsInstance.charts[this.index]?.series![1];
 
-    ohlcSeries?.update({
+        ohlcSeries?.update({
+          type: "ohlc",
+          id: `${this.symbol}-ohlc`,
+          name: `${this.symbol} Stock Price`,
+          data: highChartData.ohlc
+        });
+        volumeSeries?.update({
+          type: "column",
+          id: `${this.symbol}-volume`,
+          name: `${this.symbol} Volume`,
+          data: highChartData.volume
+        });*/
+
+    this.chartOptions.series = [{
       type: "ohlc",
       id: `${this.symbol}-ohlc`,
       name: `${this.symbol} Stock Price`,
       data: highChartData.ohlc
-    });
-    volumeSeries?.update({
-      type: "column",
-      id: `${this.symbol}-volume`,
-      name: `${this.symbol} Volume`,
-      data: highChartData.volume
-    });
+    },
+      {
+        type: "column",
+        id: `${this.symbol}-volume`,
+        name: `${this.symbol} Volume`,
+        data: highChartData.volume
+      }
+    ];
+    this.hasChartUpdated = true;
   }
 }
