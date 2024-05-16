@@ -6,11 +6,13 @@ import {NgIf} from "@angular/common";
 import Highcharts from 'highcharts';
 import * as Highstock from "highcharts/highstock";
 import {HighchartsData} from "../../models/HighchartData";
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+import {MatExpansionModule} from "@angular/material/expansion";
 
 @Component({
   selector: 'app-intraday-chart',
   standalone: true,
-  imports: [HighchartsChartModule, NgIf],
+  imports: [HighchartsChartModule, NgIf, MatProgressSpinnerModule, MatExpansionModule],
   templateUrl: './intraday-chart.component.html',
   styleUrl: './intraday-chart.component.css'
 })
@@ -21,13 +23,17 @@ export class IntradayChartComponent implements OnInit {
   symbolService: SymbolService = inject(SymbolService);
   HighchartsInstance: typeof Highcharts = Highstock;
   hasChartUpdated: boolean = false;
+  isLoading: boolean = true;
+  error: string | null = null;
   chartOptions: Highcharts.Options = {
     title: {
       style: {
         color: '#efefef'
       }
     },
-    colors: ['#058DC7', '#50B432', '#ED561B', '#DDDF00', '#24CBE5', '#64E572', '#FF9655', '#FFF263', '#6AF9C4'],
+    colors: ['#E91E63', '#3F51B5', '#F44336',
+      '#9C27B0', '#24CBE5', '#64E572', '#FF9655',
+      '#FFF263', '#6AF9C4'],
     chart: {
       backgroundColor: '#262626',
     },
@@ -114,14 +120,14 @@ export class IntradayChartComponent implements OnInit {
         if (point.isHeader) {
           position = {
             x: Math.max(
-                // Left side limit
-                chart.plotLeft,
-                Math.min(
-                    point.plotX + chart.plotLeft - width / 2,
-                    // Right side limit
-                    // @ts-ignore
-                    chart.chartWidth - width - chart.marginRight
-                )
+              // Left side limit
+              chart.plotLeft,
+              Math.min(
+                point.plotX + chart.plotLeft - width / 2,
+                // Right side limit
+                // @ts-ignore
+                chart.chartWidth - width - chart.marginRight
+              )
             ),
             y: point.plotY
           };
@@ -133,7 +139,6 @@ export class IntradayChartComponent implements OnInit {
             y: point.series.yAxis.top - chart.plotTop
           };
         }
-
         return position;
       }
     },
@@ -145,7 +150,6 @@ export class IntradayChartComponent implements OnInit {
       {
         type: "column",
         data: [],
-        yAxis: 1
       }
     ],
     responsive: {
@@ -165,8 +169,16 @@ export class IntradayChartComponent implements OnInit {
   };
 
   ngOnInit(): void {
-    this.symbol && this.symbolService.getIntraday(this.symbol, '1min', "full").subscribe((highChartData: HighchartsData) => {
-      this.setChartData(highChartData);
+    this.symbol && this.symbolService.getIntraday(this.symbol, '1min', "full")
+    .subscribe({
+      next: (highChartData: HighchartsData) => {
+        this.isLoading = false;
+        this.setChartData(highChartData);
+      },
+      error: err => {
+        this.isLoading = false;
+        this.error = err.error;
+      }
     });
   };
 
@@ -188,17 +200,20 @@ export class IntradayChartComponent implements OnInit {
           data: highChartData.volume
         });*/
 
-    this.chartOptions.series = [{
-      type: "ohlc",
-      id: `${this.symbol}-ohlc`,
-      name: `${this.symbol} Stock Price`,
-      data: highChartData.ohlc
-    },
+    this.chartOptions.title!.text = `${this.symbol} Stock Price`;
+    this.chartOptions.series = [
+      {
+        type: "ohlc",
+        id: `${this.symbol}-ohlc`,
+        name: `${this.symbol} Stock Price`,
+        data: highChartData.ohlc
+      },
       {
         type: "column",
         id: `${this.symbol}-volume`,
         name: `${this.symbol} Volume`,
-        data: highChartData.volume
+        data: highChartData.volume,
+        yAxis: 1
       }
     ];
     this.hasChartUpdated = true;

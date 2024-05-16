@@ -27,7 +27,6 @@ export const filterResponse = (intradayVariance: IntradayVariance) => (source: O
             volumeSeries.push(volume);
           }
 
-
           observer.next({ohlc: ohlcSeries.reverse(), volume: volumeSeries.reverse()});
         },
         error(err) {

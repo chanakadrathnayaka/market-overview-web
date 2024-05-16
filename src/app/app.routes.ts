@@ -6,6 +6,11 @@ import {UserComponent} from "./components/user/user.component";
 
 export const routes: Routes = [
   {
+    path: '',
+    redirectTo: 'overview',
+    pathMatch: 'full'
+  },
+  {
     path: 'overview',
     component: OverviewComponent,
   },
