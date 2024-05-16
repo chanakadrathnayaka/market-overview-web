@@ -1,25 +1,33 @@
-import {Component, inject, Input, OnInit} from '@angular/core';
+import {Component, inject, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
 import {HighchartsChartModule} from "highcharts-angular";
+import {
+  MatExpansionPanel,
+  MatExpansionPanelHeader,
+  MatExpansionPanelTitle
+} from "@angular/material/expansion";
+import {MatProgressSpinner} from "@angular/material/progress-spinner";
 import {SymbolService} from "../../services/symbol.service";
-import {NgIf} from "@angular/common";
-
-import Highcharts from 'highcharts';
+import Highcharts from "highcharts";
 import * as Highstock from "highcharts/highstock";
 import {HighchartsData} from "../../models/HighchartData";
-import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
-import {MatExpansionModule} from "@angular/material/expansion";
+import {TradeResponse} from "../../models/TradeResponse";
 
 @Component({
-  selector: 'app-intraday-chart',
+  selector: 'app-realtime-chart',
   standalone: true,
-  imports: [HighchartsChartModule, NgIf, MatProgressSpinnerModule, MatExpansionModule],
-  templateUrl: './intraday-chart.component.html',
-  styleUrl: './intraday-chart.component.css'
+  imports: [
+    HighchartsChartModule,
+    MatExpansionPanel,
+    MatExpansionPanelHeader,
+    MatExpansionPanelTitle,
+    MatProgressSpinner
+  ],
+  templateUrl: './realtime-chart.component.html',
+  styleUrl: './realtime-chart.component.css'
 })
-export class IntradayChartComponent implements OnInit {
+export class RealtimeChartComponent implements OnInit, OnChanges, OnDestroy {
 
   @Input() symbol: string | null = null;
-  @Input() index: number = 0;
   symbolService: SymbolService = inject(SymbolService);
   HighchartsInstance: typeof Highcharts = Highstock;
   hasChartUpdated: boolean = false;
@@ -40,34 +48,30 @@ export class IntradayChartComponent implements OnInit {
     rangeSelector: {
       buttons: [{
         type: 'minute',
+        count: 1,
+        text: '1m'
+      }, {
+        type: 'minute',
         count: 5,
         text: '5m'
+      }, {
+        type: 'minute',
+        count: 15,
+        text: '15m'
       }, {
         type: 'minute',
         count: 30,
         text: '30m'
       }, {
-        type: 'hour',
-        count: 1,
-        text: '1h'
-      }, {
-        type: 'day',
-        count: 1,
-        text: '1d'
-      }, {
-        type: 'month',
-        count: 1,
-        text: '1m'
-      }, {
-        type: 'year',
-        count: 1,
-        text: '1y'
+        type: 'minute',
+        count: 60,
+        text: '60m'
       }, {
         type: 'all',
         text: 'All'
       }],
-      inputEnabled: true,
-      selected: 7
+      inputEnabled: false,
+      selected: 6
     },
     yAxis: [
       {
@@ -144,7 +148,7 @@ export class IntradayChartComponent implements OnInit {
     },
     series: [
       {
-        type: "ohlc",
+        type: "area",
         data: []
       },
       {
@@ -167,29 +171,63 @@ export class IntradayChartComponent implements OnInit {
       ]
     }
   };
+  timerId: number = -1;
 
   ngOnInit(): void {
-    this.symbol && this.symbolService.getIntraday(this.symbol, '1min', "full")
+    this.timerId = setInterval(() => {
+      const dummy: TradeResponse = {
+        p: Math.random() * (200 - 160) + 160,
+        s: this.symbol!,
+        v: Math.random() * (100 - 1) + 1,
+        t: new Date().getTime()
+      }
+      this.addDataPoints(dummy);
+    }, 1000);
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    console.log(changes['symbol'].currentValue);
+    this.isLoading = true;
+
+    this.symbol && this.symbolService.getIntraday(this.symbol, '1min')
     .subscribe({
       next: (highChartData: HighchartsData) => {
         this.isLoading = false;
-        this.setChartData(highChartData);
+        this.initializeChart(highChartData);
       },
       error: err => {
         this.isLoading = false;
         this.error = err.error;
       }
     });
-  };
+  }
 
-  setChartData(highChartData: HighchartsData): void {
+  initializeChart(highChartData: HighchartsData): void {
+
     this.chartOptions.title!.text = `${this.symbol} Stock Price`;
     this.chartOptions.series = [
       {
-        type: "ohlc",
-        id: `${this.symbol}-ohlc`,
+        type: 'area',
+        id: `${this.symbol}-intraday`,
         name: `${this.symbol} Stock Price`,
-        data: highChartData.ohlc
+        data: highChartData.ohlc,
+        gapSize: 5,
+        tooltip: {
+          valueDecimals: 2
+        },
+        fillColor: {
+          linearGradient: {
+            x1: 0,
+            y1: 0,
+            x2: 0,
+            y2: 1
+          },
+          stops: [
+            [0, '#E91E63'],
+            [1, '#E91E6300']
+          ]
+        },
+        threshold: null
       },
       {
         type: "column",
@@ -200,5 +238,21 @@ export class IntradayChartComponent implements OnInit {
       }
     ];
     this.hasChartUpdated = true;
+  }
+
+  addDataPoints(data: TradeResponse) {
+    const priceDataPoint = [data.t, data.p];
+    const volumeDataPoint = [data.t, data.v];
+
+    console.log('Updating', priceDataPoint, volumeDataPoint)
+    // @ts-ignore
+    this.chartOptions.series[0].data.push(priceDataPoint);
+    // @ts-ignore
+    this.chartOptions.series[1].data.push(volumeDataPoint);
+    this.hasChartUpdated = true;
+  }
+
+  ngOnDestroy(): void {
+    clearInterval(this.timerId);
   }
 }

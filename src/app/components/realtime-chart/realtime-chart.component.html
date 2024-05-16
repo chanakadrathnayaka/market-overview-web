@@ -1,0 +1,24 @@
+@if (isLoading) {
+  <div class="flex justify-center items-center my-20">
+    <mat-spinner></mat-spinner>
+  </div>
+} @else if (error) {
+  <div class="flex justify-center items-center my-20">
+    <mat-expansion-panel hideToggle>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <span class="text-red-500">Oh Snap! There is an error occurred.</span>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <p>{{ error }}</p>
+    </mat-expansion-panel>
+  </div>
+} @else {
+  <highcharts-chart
+    style="width: 100%; display: block; height: 100%"
+    [Highcharts]="HighchartsInstance"
+    [constructorType]="'stockChart'"
+    [options]="chartOptions"
+    [(update)]="hasChartUpdated">
+  </highcharts-chart>
+}

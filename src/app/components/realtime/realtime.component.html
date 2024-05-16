@@ -1,1 +1,12 @@
-<p>realtime works!</p>
+<div class="flex gap-4" style="height: calc(100dvh - 16px)">
+  <div class="border w-1/5">
+    <mat-action-list>
+      @for (s of symbols; track s) {
+        <button mat-list-item (click)="show(s)">{{ s }}</button>
+      }
+    </mat-action-list>
+  </div>
+  <div class="border w-4/5">
+    <app-realtime-chart [symbol]="selectedSymbol"/>
+  </div>
+</div>
