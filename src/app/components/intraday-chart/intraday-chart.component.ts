@@ -21,9 +21,50 @@ export class IntradayChartComponent implements OnInit {
   symbolService: SymbolService = inject(SymbolService);
   HighchartsInstance: typeof Highcharts = Highstock;
   chartOptions: Highcharts.Options = {
+    title: {
+      style: {
+        color: '#efefef'
+      }
+    },
     colors: ['#058DC7', '#50B432', '#ED561B', '#DDDF00', '#24CBE5', '#64E572', '#FF9655', '#FFF263', '#6AF9C4'],
     chart: {
-      backgroundColor: '#363636',
+      backgroundColor: '#262626',
+    },
+    rangeSelector: {
+      buttons: [{
+        type: 'minute',
+        count: 1,
+        text: '1m'
+      }, {
+        type: 'minute',
+        count: 5,
+        text: '5m'
+      }, {
+        type: 'minute',
+        count: 30,
+        text: '30m'
+      }, {
+        type: 'hour',
+        count: 1,
+        text: '1h'
+      }, {
+        type: 'day',
+        count: 1,
+        text: '1d'
+      }, {
+        type: 'month',
+        count: 1,
+        text: '1m'
+      }, {
+        type: 'year',
+        count: 1,
+        text: '1y'
+      }, {
+        type: 'all',
+        text: 'All'
+      }],
+      inputEnabled: true, // it supports only days
+      selected: 4 // all
     },
     yAxis: [
       {
