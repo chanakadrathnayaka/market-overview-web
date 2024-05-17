@@ -117,21 +117,17 @@ export class RealtimeChartComponent implements OnChanges, OnDestroy {
             count: 30,
             text: '30m'
           }, {
-            type: 'hour',
-            count: 1,
-            text: '1h'
-          }, {
             type: 'all',
             count: 1,
             text: 'All'
           }],
-          selected: 0, //1h
+          selected: 0, //1m
           inputEnabled: false
         },
 
         navigator: {
           series: {
-            color: '#000000'
+            color: '#E91E63'
           }
         },
 
