@@ -12,7 +12,7 @@ import {RealtimeChartComponent} from "../realtime-chart/realtime-chart.component
 })
 export class RealtimeComponent {
 
-  symbols: string[] = ['AAPL', 'GOOG', 'IBM', 'PDFS', 'AMZN', 'META', 'TSLA'] //
+  symbols: string[] = ['AAPL',] //'BINANCE:BTCUSDT','GOOG', 'IBM', 'PDFS', 'AMZN', 'META', 'TSLA'
   selectedSymbol: string | null = this.symbols[0];
 
   show(symbol: string) {
