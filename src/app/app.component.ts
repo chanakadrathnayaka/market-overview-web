@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core';
 import {RouterLink, RouterLinkActive, RouterOutlet} from '@angular/router';
 import {MatListModule} from "@angular/material/list";
 import {MatSidenavModule} from "@angular/material/sidenav";
@@ -7,6 +7,8 @@ import {MatIconModule} from "@angular/material/icon";
 import {MatButtonModule} from "@angular/material/button";
 import {MatDialog} from "@angular/material/dialog";
 import {SearchBoxComponent} from "./components/search-box/search-box.component";
+import {ApplicationService} from "./services/application.service";
+import {AccessComponent} from "./components/access/access.component";
 
 @Component({
   selector: 'app-root',
@@ -15,11 +17,26 @@ import {SearchBoxComponent} from "./components/search-box/search-box.component";
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
-export class AppComponent {
-  title = 'market-overview-web';
+export class AppComponent implements OnInit {
+  applicationService: ApplicationService = inject(ApplicationService);
+
   hideMenuText: boolean = true;
+  isUserLoggedIn: boolean = false;
 
   constructor(public dialog: MatDialog) {
+
+  }
+
+  ngOnInit(): void {
+    this.applicationService.isLoggedIn().subscribe(isUserLoggedIn => {
+      this.isUserLoggedIn = isUserLoggedIn;
+      if (!isUserLoggedIn) {
+        this.dialog.open(AccessComponent, {
+          width: '30%',
+          disableClose: true
+        });
+      }
+    })
   }
 
   logout() {
@@ -31,13 +48,9 @@ export class AppComponent {
   }
 
   openSearchBox(): void {
-    const dialogRef = this.dialog.open(SearchBoxComponent, {
+    this.dialog.open(SearchBoxComponent, {
       width: '70%',
       height: '50%',
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
     });
   }
 }

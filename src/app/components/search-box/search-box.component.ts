@@ -8,7 +8,7 @@ import {SearchResult} from "../../models/SearchResult";
 import {MatListModule, MatSelectionListChange} from "@angular/material/list";
 import {FormsModule} from "@angular/forms";
 import {MatExpansionModule} from "@angular/material/expansion";
-import {UserPreferenceService} from "../../services/user-preference.service";
+import {ApplicationService} from "../../services/application.service";
 
 @Component({
   selector: 'app-search-box',
@@ -33,7 +33,7 @@ export class SearchBoxComponent {
   searchValue: string = '';
 
   symbolService: SymbolService = inject(SymbolService);
-  userPreferenceService: UserPreferenceService = inject(UserPreferenceService);
+  applicationService: ApplicationService = inject(ApplicationService);
 
   constructor(public dialogRef: MatDialogRef<SearchBoxComponent>) {
   }
@@ -64,7 +64,7 @@ export class SearchBoxComponent {
     const selectedOptions = event.source.selectedOptions.selected;
     const selectedValues = selectedOptions.map(option => (<string>option.value));
 
-    this.userPreferenceService.addSymbol(selectedValues);
+    this.applicationService.addSymbol(selectedValues);
   }
 
   close() {

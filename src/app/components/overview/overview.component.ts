@@ -1,7 +1,7 @@
 import {Component, inject, OnInit} from '@angular/core';
 import {IntradayChartComponent} from "../intraday-chart/intraday-chart.component";
 import {NgForOf} from "@angular/common";
-import {UserPreferenceService} from "../../services/user-preference.service";
+import {ApplicationService} from "../../services/application.service";
 
 @Component({
   selector: 'app-overview',
@@ -13,10 +13,10 @@ import {UserPreferenceService} from "../../services/user-preference.service";
 export class OverviewComponent implements OnInit {
 
   symbols: string[] = []
-  userPreferenceService: UserPreferenceService = inject(UserPreferenceService);
+  applicationService: ApplicationService = inject(ApplicationService);
 
   ngOnInit(): void {
-    this.userPreferenceService.symbols().subscribe({
+    this.applicationService.symbols().subscribe({
       next: (data: Set<string>) => {
         this.symbols = Array.from(data);
       }

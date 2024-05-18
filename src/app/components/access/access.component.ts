@@ -1,6 +1,4 @@
 import {Component, inject} from '@angular/core';
-import {UserService} from "../../services/user.service";
-import {MatTabsModule} from "@angular/material/tabs";
 import {
   FormControl,
   FormGroupDirective,
@@ -9,20 +7,24 @@ import {
   ReactiveFormsModule,
   Validators
 } from "@angular/forms";
-import {MatInputModule} from "@angular/material/input";
-import {MatFormFieldModule} from "@angular/material/form-field";
-import {ErrorStateMatcher} from "@angular/material/core";
 import {MatButtonModule} from "@angular/material/button";
+import {MatFormFieldModule} from "@angular/material/form-field";
+import {MatInputModule} from "@angular/material/input";
+import {MatTabsModule} from "@angular/material/tabs";
+import {UserService} from "../../services/user.service";
+import {ErrorStateMatcher} from "@angular/material/core";
+import {MatDialogRef} from "@angular/material/dialog";
 
 @Component({
-  selector: 'app-user',
+  selector: 'app-access',
   standalone: true,
   imports: [MatTabsModule, FormsModule, MatFormFieldModule, MatInputModule, ReactiveFormsModule, MatButtonModule],
-  templateUrl: './user.component.html',
-  styleUrl: './user.component.css'
+  templateUrl: './access.component.html',
+  styleUrl: './access.component.css'
 })
-export class UserComponent {
-  userPreferenceService: UserService = inject(UserService);
+export class AccessComponent {
+
+  userService: UserService = inject(UserService);
 
   loginEmailFormControl = new FormControl('', [Validators.required, Validators.email]);
   loginPasswordFormControl = new FormControl('', [Validators.required]);
@@ -32,6 +34,8 @@ export class UserComponent {
   lastNameFormControl = new FormControl('', [Validators.required]);
   matcher = new MyErrorStateMatcher();
 
+  constructor(public dialogRef: MatDialogRef<AccessComponent>) {
+  }
 }
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {
