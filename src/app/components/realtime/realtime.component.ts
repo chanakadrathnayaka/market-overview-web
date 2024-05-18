@@ -3,11 +3,12 @@ import {MatListModule} from "@angular/material/list";
 import {MatGridListModule} from "@angular/material/grid-list";
 import {RealtimeChartComponent} from "../realtime-chart/realtime-chart.component";
 import {UserPreferenceService} from "../../services/user-preference.service";
+import {MatDividerModule} from "@angular/material/divider";
 
 @Component({
   selector: 'app-realtime',
   standalone: true,
-  imports: [MatListModule, MatGridListModule, RealtimeChartComponent],
+  imports: [MatListModule, MatGridListModule, MatDividerModule, RealtimeChartComponent],
   templateUrl: './realtime.component.html',
   styleUrl: './realtime.component.css'
 })

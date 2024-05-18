@@ -14,7 +14,7 @@
     </div>
   </div>
 </mat-toolbar>
-<mat-sidenav-container autosize="true" class="sidenav-container">
+<mat-sidenav-container autosize="true">
   <mat-sidenav [attr.role]="'navigation'" [mode]="'side'" [opened]="true" fixedInViewport="true"
                fixedTopGap="65">
     <mat-nav-list class="h-full">
@@ -50,6 +50,8 @@
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content class="px-4 py-6">
-    <router-outlet></router-outlet>
+    <div class="sidenav-container">
+      <router-outlet></router-outlet>
+    </div>
   </mat-sidenav-content>
 </mat-sidenav-container>
