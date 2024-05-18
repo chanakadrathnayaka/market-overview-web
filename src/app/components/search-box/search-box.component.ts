@@ -67,7 +67,9 @@ export class SearchBoxComponent {
     const selectedValues = selectedOptions.map(option => (<string>option.value));
 
     this.applicationService.addSymbol(selectedValues);
-    this.userService.update({preferences: selectedValues}).subscribe({
+    const userProfile = this.applicationService.getUserProfile().getValue();
+    const currentEmail = userProfile.email;
+    this.userService.update(currentEmail, {preferences: Array.from(this.applicationService.symbolsValues())}).subscribe({
       next: value => {
         this.applicationService.setLoggedIn(true);
         this.applicationService.setUserProfile(value);

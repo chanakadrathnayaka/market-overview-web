@@ -22,7 +22,7 @@ export class UserService {
     });
   }
 
-  update(profile: {
+  update(currentEmail: string, profile: {
     email?: string,
     password?: string,
     firstName?: string,
@@ -31,6 +31,7 @@ export class UserService {
   }): Observable<UserProfile> {
 
     return this.httpClient.put<UserProfile>(`${environment.apiHost}/user/profile`, {
+      currentEmail,
       ...profile
     });
   }

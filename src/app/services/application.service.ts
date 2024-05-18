@@ -33,6 +33,10 @@ export class ApplicationService {
     return this.symbolBehaviorSubject.asObservable();
   }
 
+  symbolsValues(): Set<string> {
+    return this.symbolBehaviorSubject.getValue();
+  }
+
   addSymbol(symbols: string[]) {
     const symbolSet = this.symbolBehaviorSubject.getValue();
     symbols.forEach(symbol => {
@@ -60,7 +64,7 @@ export class ApplicationService {
     this.userProfileBehaviorSubject.next(userProfile);
   }
 
-  getUserProfile(): Observable<UserProfile> {
-    return this.userProfileBehaviorSubject.asObservable();
+  getUserProfile(): BehaviorSubject<UserProfile> {
+    return this.userProfileBehaviorSubject;
   }
 }
