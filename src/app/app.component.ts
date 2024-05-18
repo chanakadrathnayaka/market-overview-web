@@ -40,7 +40,7 @@ export class AppComponent implements OnInit {
   }
 
   logout() {
-    alert('working')
+    this.applicationService.setLoggedIn(false);
   }
 
   toggleDisplayText() {

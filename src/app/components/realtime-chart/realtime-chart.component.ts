@@ -44,9 +44,9 @@ export class RealtimeChartComponent implements OnChanges, OnDestroy {
           this.setupChart(highChartData);
           this.connectRealtimeData();
         },
-        error: err => {
+        error: error => {
           this.isLoading = false;
-          this.error = err.error;
+          this.error = error.error.message || error.message;
         }
       });
     }

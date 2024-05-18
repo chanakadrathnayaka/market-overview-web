@@ -178,9 +178,9 @@ export class IntradayChartComponent implements OnInit {
         this.isLoading = false;
         this.setChartData(highChartData);
       },
-      error: err => {
+      error: error => {
         this.isLoading = false;
-        this.error = err.error.code || err.error;
+        this.error = error.error.message || error.message;
       }
     });
   };

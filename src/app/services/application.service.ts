@@ -1,15 +1,32 @@
-import {Injectable} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {BehaviorSubject, Observable} from "rxjs";
+import {CookieService} from "ngx-cookie-service";
+import {UserProfile} from "../models/UserProfile";
 
 @Injectable({
   providedIn: 'root'
 })
 export class ApplicationService {
-  private readonly symbolBehaviorSubject: BehaviorSubject<Set<string>> = new BehaviorSubject<Set<string>>(new Set<string>());
-  private readonly loggedInBehaviorSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  cookieService = inject(CookieService);
+  private readonly symbolBehaviorSubject: BehaviorSubject<Set<string>>;
+  private readonly loggedInBehaviorSubject: BehaviorSubject<boolean>;
+  private readonly userProfileBehaviorSubject: BehaviorSubject<UserProfile>;
 
   constructor() {
-    this.symbolBehaviorSubject.next(new Set<string>(['AAPL', 'GOOG', 'IBM', 'PDFS']));
+    this.loggedInBehaviorSubject = new BehaviorSubject<boolean>(this.cookieService.get('logged') === 'yes');
+    const profile = localStorage.getItem('profile');
+    if (!profile) {
+      this.userProfileBehaviorSubject = new BehaviorSubject<UserProfile>({} as UserProfile);
+      this.symbolBehaviorSubject = new BehaviorSubject<Set<string>>(new Set<string>());
+    } else {
+      const value: UserProfile = <UserProfile>JSON.parse(profile);
+      if (value.preferences) {
+        this.symbolBehaviorSubject = new BehaviorSubject<Set<string>>(new Set<string>(value.preferences));
+      } else {
+        this.symbolBehaviorSubject = new BehaviorSubject<Set<string>>(new Set<string>());
+      }
+      this.userProfileBehaviorSubject = new BehaviorSubject<UserProfile>(value);
+    }
   }
 
   symbols(): Observable<Set<string>> {
@@ -24,11 +41,26 @@ export class ApplicationService {
     this.symbolBehaviorSubject.next(symbolSet);
   }
 
+  setLoggedIn(status: boolean) {
+    if (status) {
+      this.cookieService.set('logged', 'yes');
+    } else {
+      this.cookieService.set('logged', 'no', 0);
+      localStorage.removeItem('profile');
+    }
+    this.loggedInBehaviorSubject.next(status);
+  }
+
   isLoggedIn(): Observable<boolean> {
     return this.loggedInBehaviorSubject.asObservable();
   }
 
-  setLoggedIn(loggedIn: boolean) {
-    this.loggedInBehaviorSubject.next(loggedIn);
+  setUserProfile(userProfile: UserProfile) {
+    localStorage.setItem('profile', JSON.stringify(userProfile));
+    this.userProfileBehaviorSubject.next(userProfile);
+  }
+
+  getUserProfile(): Observable<UserProfile> {
+    return this.userProfileBehaviorSubject.asObservable();
   }
 }

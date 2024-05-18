@@ -1,57 +1,59 @@
-<mat-toolbar>
-  <div class="flex items-center justify-between w-full">
-    <div>
-      US
-      <span class="hidden">[pre-market|post-market]</span>
-      <span class="hidden">isOpen?green dot: red dot</span>
-      <span class="hidden">market timezone: America/New_York</span>
-      <span class="hidden">Local time zone time: </span>
-    </div>
-    <div>
-      <button (click)="openSearchBox()" mat-fab>
-        <mat-icon>search</mat-icon>
-      </button>
-    </div>
-  </div>
-</mat-toolbar>
-<mat-sidenav-container autosize="true">
-  <mat-sidenav [attr.role]="'navigation'" [mode]="'side'" [opened]="true" fixedInViewport="true"
-               fixedTopGap="65">
-    <mat-nav-list class="h-full">
-      <div class="flex flex-col justify-between h-[inherit]">
-        <div>
-          <mat-list-item (click)="toggleDisplayText()">
-            <mat-icon aria-hidden="false" matListItemIcon>{{
-                hideMenuText
-                  ? 'keyboard_double_arrow_right' : 'keyboard_double_arrow_left'
-              }}
-            </mat-icon>
-          </mat-list-item>
-          <a mat-list-item routerLink="overview" routerLinkActive="active">
-            <mat-icon aria-hidden="false" matListItemIcon>home</mat-icon>
-            <div [hidden]="hideMenuText" matListItemTitle>Overview</div>
-          </a>
-          <a mat-list-item routerLink="realtime" routerLinkActive="active">
-            <mat-icon aria-hidden="false" matListItemIcon>timer</mat-icon>
-            <div [hidden]="hideMenuText" matListItemTitle>Realtime updates</div>
-          </a>
-        </div>
-        <div>
-          <a mat-list-item routerLink="profile" routerLinkActive="active">
-            <mat-icon aria-hidden="false" matListItemIcon>person</mat-icon>
-            <div [hidden]="hideMenuText" matListItemTitle>Preference</div>
-          </a>
-          <mat-list-item (click)="logout()">
-            <mat-icon aria-hidden="false" matListItemIcon>logout</mat-icon>
-            <div [hidden]="hideMenuText" matListItemTitle>Logout</div>
-          </mat-list-item>
-        </div>
+@if (isUserLoggedIn) {
+  <mat-toolbar>
+    <div class="flex items-center justify-between w-full">
+      <div>
+        US
+        <span class="hidden">[pre-market|post-market]</span>
+        <span class="hidden">isOpen?green dot: red dot</span>
+        <span class="hidden">market timezone: America/New_York</span>
+        <span class="hidden">Local time zone time: </span>
       </div>
-    </mat-nav-list>
-  </mat-sidenav>
-  <mat-sidenav-content class="px-4 py-6">
-    <div class="sidenav-container">
-      <router-outlet></router-outlet>
+      <div>
+        <button (click)="openSearchBox()" mat-fab>
+          <mat-icon>search</mat-icon>
+        </button>
+      </div>
     </div>
-  </mat-sidenav-content>
-</mat-sidenav-container>
+  </mat-toolbar>
+  <mat-sidenav-container autosize="true">
+    <mat-sidenav [attr.role]="'navigation'" [mode]="'side'" [opened]="true" fixedInViewport="true"
+                 fixedTopGap="65">
+      <mat-nav-list class="h-full">
+        <div class="flex flex-col justify-between h-[inherit]">
+          <div>
+            <mat-list-item (click)="toggleDisplayText()">
+              <mat-icon aria-hidden="false" matListItemIcon>{{
+                  hideMenuText
+                    ? 'keyboard_double_arrow_right' : 'keyboard_double_arrow_left'
+                }}
+              </mat-icon>
+            </mat-list-item>
+            <a mat-list-item routerLink="overview" routerLinkActive="active">
+              <mat-icon aria-hidden="false" matListItemIcon>home</mat-icon>
+              <div [hidden]="hideMenuText" matListItemTitle>Overview</div>
+            </a>
+            <a mat-list-item routerLink="realtime" routerLinkActive="active">
+              <mat-icon aria-hidden="false" matListItemIcon>timer</mat-icon>
+              <div [hidden]="hideMenuText" matListItemTitle>Realtime updates</div>
+            </a>
+          </div>
+          <div>
+            <a mat-list-item routerLink="profile" routerLinkActive="active">
+              <mat-icon aria-hidden="false" matListItemIcon>person</mat-icon>
+              <div [hidden]="hideMenuText" matListItemTitle>Preference</div>
+            </a>
+            <mat-list-item (click)="logout()">
+              <mat-icon aria-hidden="false" matListItemIcon>logout</mat-icon>
+              <div [hidden]="hideMenuText" matListItemTitle>Logout</div>
+            </mat-list-item>
+          </div>
+        </div>
+      </mat-nav-list>
+    </mat-sidenav>
+    <mat-sidenav-content class="px-4 py-6">
+      <div class="sidenav-container">
+        <router-outlet></router-outlet>
+      </div>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+}

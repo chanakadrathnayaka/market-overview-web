@@ -9,6 +9,7 @@ import {MatListModule, MatSelectionListChange} from "@angular/material/list";
 import {FormsModule} from "@angular/forms";
 import {MatExpansionModule} from "@angular/material/expansion";
 import {ApplicationService} from "../../services/application.service";
+import {UserService} from "../../services/user.service";
 
 @Component({
   selector: 'app-search-box',
@@ -34,6 +35,7 @@ export class SearchBoxComponent {
 
   symbolService: SymbolService = inject(SymbolService);
   applicationService: ApplicationService = inject(ApplicationService);
+  userService: UserService = inject(UserService);
 
   constructor(public dialogRef: MatDialogRef<SearchBoxComponent>) {
   }
@@ -53,9 +55,9 @@ export class SearchBoxComponent {
         this.resultCount = value.count;
         this.isLoading = false;
       },
-      error: err => {
+      error: error => {
         this.isLoading = false;
-        this.error = err.error?.code || err.error;
+        this.error = error.error.message || error.message;
       }
     })
   }
@@ -65,9 +67,11 @@ export class SearchBoxComponent {
     const selectedValues = selectedOptions.map(option => (<string>option.value));
 
     this.applicationService.addSymbol(selectedValues);
-  }
-
-  close() {
-    this.dialogRef.close();
+    this.userService.update({preferences: selectedValues}).subscribe({
+      next: value => {
+        this.applicationService.setLoggedIn(true);
+        this.applicationService.setUserProfile(value);
+      }
+    });
   }
 }

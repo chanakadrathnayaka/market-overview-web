@@ -14,17 +14,20 @@ import {MatTabsModule} from "@angular/material/tabs";
 import {UserService} from "../../services/user.service";
 import {ErrorStateMatcher} from "@angular/material/core";
 import {MatDialogRef} from "@angular/material/dialog";
+import {ApplicationService} from "../../services/application.service";
+import {MatProgressBarModule} from "@angular/material/progress-bar";
 
 @Component({
   selector: 'app-access',
   standalone: true,
-  imports: [MatTabsModule, FormsModule, MatFormFieldModule, MatInputModule, ReactiveFormsModule, MatButtonModule],
+  imports: [MatTabsModule, MatFormFieldModule, MatInputModule, ReactiveFormsModule, MatButtonModule, FormsModule, MatProgressBarModule],
   templateUrl: './access.component.html',
   styleUrl: './access.component.css'
 })
 export class AccessComponent {
 
   userService: UserService = inject(UserService);
+  applicationService: ApplicationService = inject(ApplicationService);
 
   loginEmailFormControl = new FormControl('', [Validators.required, Validators.email]);
   loginPasswordFormControl = new FormControl('', [Validators.required]);
@@ -33,8 +36,56 @@ export class AccessComponent {
   firstNameFormControl = new FormControl('', [Validators.required]);
   lastNameFormControl = new FormControl('', [Validators.required]);
   matcher = new MyErrorStateMatcher();
+  error?: string;
+  isLoading: boolean = false;
 
   constructor(public dialogRef: MatDialogRef<AccessComponent>) {
+  }
+
+  login(e: any) {
+    e.preventDefault();
+    if (this.loginEmailFormControl.valid && this.loginPasswordFormControl.valid) {
+      this.isLoading = true;
+      this.userService.login(this.loginEmailFormControl.value!, this.loginPasswordFormControl.value!).subscribe({
+        next: value => {
+          this.isLoading = false;
+          this.applicationService.setLoggedIn(true);
+          this.applicationService.setUserProfile(value);
+          this.close();
+        },
+        error: (error) => {
+          this.error = error.error.message || error.message;
+          this.isLoading = false;
+        }
+      })
+    }
+  }
+
+  register(e: any) {
+    e.preventDefault();
+    if (this.emailFormControl.valid && this.passwordFormControl.valid && this.firstNameFormControl.valid && this.lastNameFormControl.valid) {
+      this.isLoading = true;
+      this.userService.register(this.emailFormControl.value!, this.passwordFormControl.value!, this.firstNameFormControl.value!, this.lastNameFormControl.value!).subscribe({
+        next: value => {
+          this.isLoading = false;
+          this.applicationService.setLoggedIn(true);
+          this.applicationService.setUserProfile(value);
+          this.close();
+        },
+        error: error => {
+          this.error = error.error.message || error.message;
+          this.isLoading = false;
+        }
+      })
+    }
+  }
+
+  actionChanged() {
+    this.error = '';
+  }
+
+  close() {
+    this.dialogRef.close();
   }
 }
 

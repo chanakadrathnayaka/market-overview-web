@@ -1,7 +1,7 @@
 <div class="px-10">
-  <mat-tab-group>
+  <mat-tab-group (selectedTabChange)="actionChanged()">
     <mat-tab label="Login">
-      <form class="py-10">
+      <form (submit)="login($event)" class="py-10">
         <mat-form-field class="w-full mb-2">
           <mat-label>Email</mat-label>
           <input [errorStateMatcher]="matcher" [formControl]="loginEmailFormControl" matInput
@@ -23,14 +23,19 @@
             <mat-error>Password is <strong>required</strong></mat-error>
           }
         </mat-form-field>
-        <div class="flex justify-end">
-          <button class="ms-2" color="primary" mat-flat-button>Login</button>
+        <div class="flex justify-between">
+          <div class="text-red-500">
+            @if (error) {
+              {{ error }}
+            }
+          </div>
+          <button class="ms-2" color="primary" mat-flat-button type="submit">Login</button>
         </div>
       </form>
     </mat-tab>
 
     <mat-tab label="Register">
-      <form class="py-10">
+      <form (submit)="register($event)" class="py-10">
         <mat-form-field class="w-full mb-2">
           <mat-label>First Name</mat-label>
           <input [errorStateMatcher]="matcher" [formControl]="firstNameFormControl" matInput
@@ -67,10 +72,19 @@
             <mat-error>Password is <strong>required</strong></mat-error>
           }
         </mat-form-field>
-        <div class="flex justify-end">
-          <button class="ms-2" color="accent" mat-flat-button>Register</button>
+        <div class="flex justify-between">
+          <div class="text-red-500">
+            @if (error) {
+              {{ error }}
+            }
+          </div>
+          <button class="ms-2" color="primary" mat-flat-button type="submit">Register</button>
         </div>
       </form>
     </mat-tab>
   </mat-tab-group>
+
 </div>
+@if (isLoading) {
+  <mat-progress-bar class="w-full" mode="indeterminate"></mat-progress-bar>
+}
