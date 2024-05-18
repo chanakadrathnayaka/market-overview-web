@@ -1,0 +1,70 @@
+<div class="md:w-1/2 mx-auto">
+  <h1 class="text-7xl">Hey {{ currentProfile.firstName }},</h1>
+  <form (submit)="update($event)" class="my-10">
+    <h3 class="text-3xl py-4">Profile</h3>
+    <mat-form-field class="w-full mb-2">
+      <mat-label>First Name</mat-label>
+      <input [errorStateMatcher]="matcher" [formControl]="firstNameFormControl" matInput
+             type="text">
+      @if (firstNameFormControl.hasError('required')) {
+        <mat-error>Email is <strong>required</strong></mat-error>
+      }
+    </mat-form-field>
+    <mat-form-field class="w-full mb-2">
+      <mat-label>Last Name</mat-label>
+      <input [errorStateMatcher]="matcher" [formControl]="lastNameFormControl" matInput
+             type="text">
+      @if (lastNameFormControl.hasError('required')) {
+        <mat-error>Email is <strong>required</strong></mat-error>
+      }
+    </mat-form-field>
+    <mat-form-field class="w-full mb-2">
+      <mat-label>Email</mat-label>
+      <input [errorStateMatcher]="matcher" [formControl]="emailFormControl" matInput
+             placeholder="Ex. pat@example.com"
+             type="email">
+      @if (emailFormControl.hasError('email') && !emailFormControl.hasError('required')) {
+        <mat-error>Please enter a valid email address</mat-error>
+      }
+      @if (emailFormControl.hasError('required')) {
+        <mat-error>Email is <strong>required</strong></mat-error>
+      }
+    </mat-form-field>
+    <mat-form-field class="w-full mb-4">
+      <mat-label>Password</mat-label>
+      <input [errorStateMatcher]="matcher" [formControl]="passwordFormControl" matInput
+             type="password">
+      @if (passwordFormControl.hasError('required')) {
+        <mat-error>Password is <strong>required</strong></mat-error>
+      }
+    </mat-form-field>
+
+    <div class="mt-16">
+      <h3 class="text-3xl">Subscribed symbols</h3>
+      <mat-action-list>
+        @for (symbol of symbols; track symbol) {
+          <mat-list-item>
+            <div class="flex justify-between items-center">
+              <span>{{ symbol }}</span>
+              <button mat-icon-button class="py-2" (click)="delete(symbol)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </mat-list-item>
+          <mat-divider></mat-divider>
+        }
+      </mat-action-list>
+    </div>
+    <div class="flex justify-between">
+      <div class="text-red-500">
+        @if (error) {
+          {{ error }}
+        }
+      </div>
+      <div>
+        <button class="ms-2" color="primary" mat-flat-button type="reset">Reset</button>
+        <button class="ms-2" color="primary" mat-flat-button type="submit">Save</button>
+      </div>
+    </div>
+  </form>
+</div>

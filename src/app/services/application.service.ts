@@ -43,6 +43,15 @@ export class ApplicationService {
       symbolSet.add(symbol);
     })
     this.symbolBehaviorSubject.next(symbolSet);
+    return this.symbolBehaviorSubject.getValue();
+  }
+
+  removeSymbol(symbol: string) {
+    const symbolSet = this.symbolBehaviorSubject.getValue();
+    symbolSet.delete(symbol);
+
+    this.symbolBehaviorSubject.next(symbolSet);
+    return this.symbolBehaviorSubject.getValue();
   }
 
   setLoggedIn(status: boolean) {
