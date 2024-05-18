@@ -37,12 +37,11 @@ export class RealtimeChartComponent implements OnChanges, OnDestroy {
   ngOnChanges(changes: SimpleChanges): void {
     let changeSymbol = changes['symbol'];
     if (this.symbol && changeSymbol && changeSymbol.currentValue !== changeSymbol.previousValue) {
-      this.symbolService.getIntraday(this.symbol, '5min')
+      this.symbolService.getIntraday(this.symbol, '1min')
       .subscribe({
         next: (highChartData: HighchartsData) => {
           this.isLoading = false;
           this.setupChart(highChartData);
-          // this.test();
           this.connectRealtimeData();
         },
         error: err => {
@@ -58,12 +57,7 @@ export class RealtimeChartComponent implements OnChanges, OnDestroy {
       {
         chart: {
           renderTo: 'container',
-          backgroundColor: '#484848',
-          events: {
-            load: () => {
-
-            }
-          }
+          backgroundColor: '#484848'
         },
         time: {
           useUTC: false,
@@ -125,12 +119,6 @@ export class RealtimeChartComponent implements OnChanges, OnDestroy {
           inputEnabled: false
         },
 
-        navigator: {
-          series: {
-            color: '#E91E63'
-          }
-        },
-
         series: [{
           type: 'area',
           id: `${this.symbol}-price`,
@@ -162,6 +150,7 @@ export class RealtimeChartComponent implements OnChanges, OnDestroy {
             ]
           },
           data: (function () {
+            // Helps to maintain the consistency, Can be removed if realtime data is available
             const d = highChartData.ohlc;
             const l = highChartData.ohlc.length;
             let t = Date.now();

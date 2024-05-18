@@ -1,0 +1,39 @@
+<form (submit)="search($event)">
+  <div class="flex p-4">
+    <input [(ngModel)]="searchValue" class="rounded-full w-full me-2 px-4"
+           name="searchValue" placeholder="Search for symbol, company name and hit enter!" required
+           type="text">
+    <button mat-fab type="submit">
+      <mat-icon>search</mat-icon>
+    </button>
+  </div>
+</form>
+<mat-dialog-content>
+  @if (isLoading) {
+    <div class="flex justify-center items-center my-20 h-full">
+      <mat-spinner></mat-spinner>
+    </div>
+  } @else if (error) {
+    <div class="flex justify-center items-center my-20">
+      <mat-expansion-panel hideToggle expanded>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <span class="text-red-500">Oh Snap! There is an error occurred.</span>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <p>{{ error }}</p>
+      </mat-expansion-panel>
+    </div>
+  } @else {
+    @if (resultCount !== -1) {
+      <div>Found {{ resultCount }} results</div>
+    }
+    <mat-selection-list (selectionChange)="selectSymbol($event)">
+      @for (result of searchResults; track result) {
+        <mat-list-option [value]="result.displaySymbol">{{ result.description }}
+          | {{ result.displaySymbol }}
+        </mat-list-option>
+      }
+    </mat-selection-list>
+  }
+</mat-dialog-content>

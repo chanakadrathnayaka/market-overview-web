@@ -37,6 +37,9 @@ export class IntradayChartComponent implements OnInit {
     chart: {
       backgroundColor: '#262626',
     },
+    time: {
+      useUTC: false,
+    },
     rangeSelector: {
       buttons: [{
         type: 'minute',
@@ -177,7 +180,7 @@ export class IntradayChartComponent implements OnInit {
       },
       error: err => {
         this.isLoading = false;
-        this.error = err.error;
+        this.error = err.error.code || err.error;
       }
     });
   };

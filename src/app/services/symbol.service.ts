@@ -6,6 +6,7 @@ import {Observable} from "rxjs";
 import {IntradayInterval} from "../models/Types";
 import {HighchartsData} from "../models/HighchartData";
 import {filterResponse} from "./service.utils";
+import {SearchResponse} from "../models/SearchResponse";
 
 @Injectable({
   providedIn: 'root'
@@ -26,5 +27,9 @@ export class SymbolService {
     return this.httpClient
     .get<IntradayResponse>(`${environment.apiHost}/symbol/intraday/${symbol}?interval=${interval}${outputSize ? `&size=${outputSize}` : ''}`)
     .pipe(filterResponse(this.intradayMap.get(interval)!));
+  }
+
+  search(symbol: string): Observable<SearchResponse> {
+    return this.httpClient.get<SearchResponse>(`${environment.apiHost}/symbol/search?symbol=${symbol}`)
   }
 }
