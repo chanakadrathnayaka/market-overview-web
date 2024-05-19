@@ -5,3 +5,13 @@
 .sidenav-container {
   min-height: calc(100dvh - 112px);
 }
+
+.search-results-container {
+  max-height: 450px;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.search-results-container::-webkit-scrollbar {
+  display: none;
+}

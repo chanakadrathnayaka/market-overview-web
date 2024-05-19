@@ -6,9 +6,10 @@ import {MatToolbarModule} from "@angular/material/toolbar";
 import {MatIconModule} from "@angular/material/icon";
 import {MatButtonModule} from "@angular/material/button";
 import {MatDialog} from "@angular/material/dialog";
-import {SearchBoxComponent} from "./components/search-box/search-box.component";
+import {SearchDialogComponent} from "./components/search-dialog/search-dialog.component";
 import {ApplicationService} from "./services/application.service";
 import {AccessComponent} from "./components/access/access.component";
+import {SetupComponent} from "./components/setup/setup.component";
 
 @Component({
   selector: 'app-root',
@@ -35,8 +36,13 @@ export class AppComponent implements OnInit {
           width: '30%',
           disableClose: true
         });
+      } else if (isUserLoggedIn && !this.hasSymbolsSetup()) {
+        this.dialog.open(SetupComponent, {
+          width: '50%',
+          disableClose: true
+        })
       }
-    })
+    });
   }
 
   logout() {
@@ -48,9 +54,14 @@ export class AppComponent implements OnInit {
   }
 
   openSearchBox(): void {
-    this.dialog.open(SearchBoxComponent, {
+    this.dialog.open(SearchDialogComponent, {
       width: '70%',
-      height: '50%',
+      height: 'fit-content',
     });
+  }
+
+  hasSymbolsSetup() {
+    const preferences = this.applicationService.getUserProfile().getValue().preferences;
+    return preferences && preferences?.length !== 0
   }
 }

@@ -1,32 +1,31 @@
 import {Component, inject} from '@angular/core';
-import {MatDialogModule, MatDialogRef} from "@angular/material/dialog";
+import {MatListModule, MatSelectionListChange} from "@angular/material/list";
 import {MatIconModule} from "@angular/material/icon";
 import {MatButtonModule} from "@angular/material/button";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
-import {SymbolService} from "../../services/symbol.service";
-import {SearchResult} from "../../models/SearchResult";
-import {MatListModule, MatSelectionListChange} from "@angular/material/list";
-import {FormsModule} from "@angular/forms";
 import {MatExpansionModule} from "@angular/material/expansion";
+import {FormsModule} from "@angular/forms";
+import {SearchResult} from "../../models/SearchResult";
+import {SymbolService} from "../../services/symbol.service";
 import {ApplicationService} from "../../services/application.service";
 import {UserService} from "../../services/user.service";
+import {MatDialogModule} from "@angular/material/dialog";
 
 @Component({
-  selector: 'app-search-box',
+  selector: 'app-search',
   standalone: true,
   imports: [
+    MatDialogModule,
     MatIconModule,
     MatButtonModule,
-    MatDialogModule,
     MatProgressSpinnerModule,
     MatListModule,
     MatExpansionModule,
-    FormsModule
-  ],
-  templateUrl: './search-box.component.html',
-  styleUrl: './search-box.component.css'
+    FormsModule],
+  templateUrl: './search.component.html',
+  styleUrl: './search.component.css'
 })
-export class SearchBoxComponent {
+export class SearchComponent {
   isLoading: boolean = false;
   searchResults: SearchResult[] = [];
   resultCount: number = -1;
@@ -36,9 +35,6 @@ export class SearchBoxComponent {
   symbolService: SymbolService = inject(SymbolService);
   applicationService: ApplicationService = inject(ApplicationService);
   userService: UserService = inject(UserService);
-
-  constructor(public dialogRef: MatDialogRef<SearchBoxComponent>) {
-  }
 
   search(e: any) {
     e.preventDefault();
@@ -71,7 +67,6 @@ export class SearchBoxComponent {
     const currentEmail = userProfile.email;
     this.userService.update(currentEmail, {preferences: Array.from(updatedSymbols)}).subscribe({
       next: value => {
-        this.applicationService.setLoggedIn(true);
         this.applicationService.setUserProfile(value);
       }
     });

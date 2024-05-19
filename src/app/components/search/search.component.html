@@ -1,5 +1,5 @@
-<form (submit)="search($event)">
-  <div class="flex p-4">
+<form (submit)="search($event)" class="mb-4">
+  <div class="flex">
     <input [(ngModel)]="searchValue" class="rounded-full w-full me-2 px-4"
            name="searchValue" placeholder="Search for symbol, company name and hit enter!" required
            type="text">
@@ -8,7 +8,7 @@
     </button>
   </div>
 </form>
-<mat-dialog-content>
+<div>
   @if (isLoading) {
     <div class="flex justify-center items-center my-20 h-full">
       <mat-spinner></mat-spinner>
@@ -26,14 +26,16 @@
     </div>
   } @else {
     @if (resultCount !== -1) {
-      <div>Found {{ resultCount }} results</div>
+      <div class="text-white text-xs">Found {{ resultCount }} results</div>
     }
-    <mat-selection-list (selectionChange)="selectSymbol($event)">
-      @for (result of searchResults; track result) {
-        <mat-list-option [value]="result.displaySymbol">{{ result.description }}
-          | {{ result.displaySymbol }}
-        </mat-list-option>
-      }
-    </mat-selection-list>
+    <div class="search-results-container overflow-y-scroll">
+      <mat-selection-list (selectionChange)="selectSymbol($event)">
+        @for (result of searchResults; track result) {
+          <mat-list-option [value]="result.displaySymbol">{{ result.description }}
+            | {{ result.displaySymbol }}
+          </mat-list-option>
+        }
+      </mat-selection-list>
+    </div>
   }
-</mat-dialog-content>
+</div>

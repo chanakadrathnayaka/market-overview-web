@@ -55,17 +55,17 @@ export class UserComponent implements OnInit {
     e.preventDefault();
     const profile: UserProfile = {} as UserProfile;
     let password;
-    if (this.currentProfile.firstName !== this.firstNameFormControl.value && this.firstNameFormControl.valid) {
+    if (this.firstNameFormControl.value && this.currentProfile.firstName !== this.firstNameFormControl.value && this.firstNameFormControl.valid) {
       profile.firstName = this.firstNameFormControl.value!;
     }
-    if (this.currentProfile.lastName !== this.lastNameFormControl.value && this.lastNameFormControl.valid) {
+    if (this.lastNameFormControl.value && this.currentProfile.lastName !== this.lastNameFormControl.value && this.lastNameFormControl.valid) {
       profile.lastName = this.lastNameFormControl.value!;
     }
-    if (this.currentProfile.email !== this.emailFormControl.value && this.emailFormControl.valid) {
+    if (this.emailFormControl.value && this.currentProfile.email !== this.emailFormControl.value && this.emailFormControl.valid) {
       profile.email = this.emailFormControl.value!;
     }
-    if (this.passwordFormControl.valid) {
-      password = this.emailFormControl.value!;
+    if (this.passwordFormControl.value && this.passwordFormControl.valid) {
+      password = this.passwordFormControl.value!;
     }
 
     if (this.currentProfile.preferences?.length !== this.symbols.length) {
