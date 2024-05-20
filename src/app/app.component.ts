@@ -1,5 +1,5 @@
 import {Component, inject, OnInit} from '@angular/core';
-import {RouterLink, RouterLinkActive, RouterOutlet} from '@angular/router';
+import {NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet} from '@angular/router';
 import {MatListModule} from "@angular/material/list";
 import {MatSidenavModule} from "@angular/material/sidenav";
 import {MatToolbarModule} from "@angular/material/toolbar";
@@ -10,19 +10,26 @@ import {SearchDialogComponent} from "./components/search-dialog/search-dialog.co
 import {ApplicationService} from "./services/application.service";
 import {AccessComponent} from "./components/access/access.component";
 import {SetupComponent} from "./components/setup/setup.component";
+import {ExchangeService} from "./services/exchange.service";
+import {ExchangeResponse} from "./models/ExchangeResponse";
+import {MatTooltipModule} from "@angular/material/tooltip";
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, MatSidenavModule, MatListModule, MatToolbarModule, MatIconModule, RouterLink, RouterLinkActive, MatButtonModule],
+  imports: [RouterOutlet, MatSidenavModule, MatListModule, MatToolbarModule, MatIconModule, RouterLink, RouterLinkActive, MatButtonModule, MatTooltipModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
 export class AppComponent implements OnInit {
   applicationService: ApplicationService = inject(ApplicationService);
+  exchangeService: ExchangeService = inject(ExchangeService);
+  router: Router = inject(Router);
 
   hideMenuText: boolean = true;
   isUserLoggedIn: boolean = false;
+  marketStatus: ExchangeResponse = {exchange: "US", isOpen: false, session: null, holiday: null};
+  currentRoute: string | null = null;
 
   constructor(public dialog: MatDialog) {
 
@@ -41,6 +48,18 @@ export class AppComponent implements OnInit {
           width: '50%',
           disableClose: true
         })
+      }
+    });
+
+    this.exchangeService.status('US').subscribe({
+      next: (response: ExchangeResponse) => {
+        this.marketStatus = response;
+      }
+    });
+
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        this.currentRoute = event.urlAfterRedirects;
       }
     });
   }

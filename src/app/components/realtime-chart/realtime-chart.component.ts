@@ -46,7 +46,7 @@ export class RealtimeChartComponent implements OnChanges, OnDestroy {
         },
         error: error => {
           this.isLoading = false;
-          this.error = error.error.message || error.message;
+          this.error = error.error.message || error.error.Information || error.message;
         }
       });
     }

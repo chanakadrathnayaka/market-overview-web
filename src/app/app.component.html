@@ -1,13 +1,26 @@
 @if (isUserLoggedIn) {
   <mat-toolbar>
     <div class="flex items-center justify-between w-full">
-      <div>
-        US
-        <span class="hidden">[pre-market|post-market]</span>
-        <span class="hidden">isOpen?green dot: red dot</span>
-        <span class="hidden">market timezone: America/New_York</span>
-        <span class="hidden">Local time zone time: </span>
+      <div class="flex items-center">
+        <span class="text-5xl">{{ marketStatus.exchange }}</span>
+        @if (marketStatus.isOpen) {
+          <span class="relative flex h-5 w-5 ms-2 self-start" matTooltip="Market is open"
+                matTooltipPosition="right">
+          <span
+            class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-5 w-5 bg-green-500"></span>
+          </span>
+        } @else {
+          <span class="rounded-full h-5 w-5 bg-red-500 ms-2 self-start"
+                matTooltip="Market is closed" matTooltipPosition="right"></span>
+        }
+        @if (marketStatus.session) {
+          <span class="ms-4">| {{ marketStatus.session }}</span>
+        }
       </div>
+      @if (marketStatus.holiday) {
+        <span class="mx-4">Holiday: {{ marketStatus.holiday }}</span>
+      }
       <div>
         <button (click)="openSearchBox()" mat-fab>
           <mat-icon>search</mat-icon>
@@ -18,7 +31,7 @@
   <mat-sidenav-container autosize="true">
     <mat-sidenav [attr.role]="'navigation'" [mode]="'side'" [opened]="true" fixedInViewport="true"
                  fixedTopGap="65">
-      <mat-nav-list class="h-full">
+      <mat-nav-list class="h-full" color="primary">
         <div class="flex flex-col justify-between h-[inherit]">
           <div>
             <mat-list-item (click)="toggleDisplayText()">
@@ -28,17 +41,20 @@
                 }}
               </mat-icon>
             </mat-list-item>
-            <a mat-list-item routerLink="overview" routerLinkActive="active">
+            <a mat-list-item routerLink="overview"
+               [activated]="!!this.currentRoute?.startsWith('/overview')">
               <mat-icon aria-hidden="false" matListItemIcon>home</mat-icon>
               <div [hidden]="hideMenuText" matListItemTitle>Overview</div>
             </a>
-            <a mat-list-item routerLink="realtime" routerLinkActive="active">
+            <a mat-list-item routerLink="realtime"
+               [activated]="!!this.currentRoute?.startsWith('/realtime')">
               <mat-icon aria-hidden="false" matListItemIcon>timer</mat-icon>
               <div [hidden]="hideMenuText" matListItemTitle>Realtime updates</div>
             </a>
           </div>
           <div>
-            <a mat-list-item routerLink="profile" routerLinkActive="active">
+            <a mat-list-item routerLink="profile"
+               [activated]="!!this.currentRoute?.startsWith('/profile')">
               <mat-icon aria-hidden="false" matListItemIcon>person</mat-icon>
               <div [hidden]="hideMenuText" matListItemTitle>Preference</div>
             </a>
