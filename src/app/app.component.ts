@@ -28,7 +28,7 @@ export class AppComponent implements OnInit {
 
   hideMenuText: boolean = true;
   isUserLoggedIn: boolean = false;
-  marketStatus: ExchangeResponse = {exchange: "US", isOpen: false, session: null, holiday: null};
+  marketStatus: ExchangeResponse = {exchange: "US", isOpen: true, session: null, holiday: null};
   currentRoute: string | null = null;
 
   constructor(public dialog: MatDialog) {

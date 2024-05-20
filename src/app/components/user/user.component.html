@@ -39,7 +39,7 @@
       }
     </mat-form-field>
 
-    <div class="mt-16">
+    <div class="my-4">
       <h3 class="text-3xl">Subscribed symbols</h3>
       <mat-action-list>
         @for (symbol of symbols; track symbol) {
@@ -55,7 +55,7 @@
         }
       </mat-action-list>
     </div>
-    <div class="flex justify-between">
+    <div class="flex justify-between mt-16">
       <div class="text-red-500">
         @if (error) {
           {{ error }}
