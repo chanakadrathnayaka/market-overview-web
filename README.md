@@ -24,3 +24,10 @@
 ### User Profile and Preferences
 
 ![User.png](resources/User.png)
+
+## Further development
+
+1. Proper unit tests are not implemented yet,
+   due to time constraint and will be implemented soon
+2. Company Profiles will be added to Realtime screen
+3. A Market Quote ribbon will be implemented.
