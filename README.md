@@ -20,10 +20,16 @@
 ### Realtime
 
 ![Realtime.png](resources/Realtime.png)
+![MarketOverviewRTScreen.gif](resources/MarketOverviewRTScreen.gif)
 
 ### User Profile and Preferences
 
 ![User.png](resources/User.png)
+
+## Deployment
+
+This application is a part of [market-overview-app](https://github.com/chanakadrathnayaka/market-overview-app)
+, and it is deployed part of the main application
 
 ## Further development
 
